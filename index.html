@@ -1,11 +1,65 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>ยินดีต้อนรับ</title>
-  </head>
-  <body>
-    <h1>🎉 ระบบสะสมแสตมป์พร้อมแล้ว!</h1>
-    <p>หน้าเว็บนี้ใช้สำหรับ LINE LIFF นะครับ</p>
-  </body>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>สะสมแสตมป์ LINE OA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <style>
+    body {
+      font-family: 'Prompt', sans-serif;
+      text-align: center;
+      padding: 2rem;
+      background: linear-gradient(to bottom, #f0f8ff, #e6f7ff);
+      color: #333;
+    }
+    h1 {
+      font-size: 1.6rem;
+      margin-bottom: 1rem;
+    }
+    #status {
+      font-size: 1.2rem;
+      margin-top: 2rem;
+      padding: 1rem;
+      border-radius: 12px;
+      background: #fff;
+      box-shadow: 0 0 12px rgba(0,0,0,0.05);
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎉 ยินดีต้อนรับสู่ระบบสะสมแสตมป์</h1>
+  <div id="status">กำลังโหลด...</div>
+
+  <script>
+    const EVENT_CODE = "stamp0626"; // รหัสกิจกรรมที่ใช้ควบคุมให้กดได้ครั้งเดียว
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx0IbnDRG7onXEkU_8d2-iMUM5E-pSZt28mlwdYEJ08o2Clmzrim80_-APLNe8XmziK/exec"; // 🔁 เปลี่ยนตรงนี้!
+
+    async function main() {
+      try {
+        await liff.init({ liffId: "2004387490" }); // 🔁 เปลี่ยนตรงนี้!
+
+        if (!liff.isLoggedIn()) {
+          liff.login();
+          return;
+        }
+
+        const profile = await liff.getProfile();
+        const userId = profile.userId;
+
+        const url = `${SCRIPT_URL}?uid=${encodeURIComponent(userId)}&event=${EVENT_CODE}`;
+        const res = await fetch(url);
+        const text = await res.text();
+
+        document.getElementById("status").innerText = text;
+      } catch (err) {
+        document.getElementById("status").innerText = "❌ เกิดข้อผิดพลาด: " + err;
+      }
+    }
+
+    main();
+  </script>
+</body>
 </html>
+
